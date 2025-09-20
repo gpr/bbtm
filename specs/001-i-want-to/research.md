@@ -47,19 +47,21 @@
 - Firebase Realtime Database: Less advanced querying
 - PostgreSQL: Would require custom backend
 
-### UI Component Library: Material-UI (MUI)
-**Decision**: Material-UI v5 for component library
+### UI Component Library: Mantine
+**Decision**: Mantine for component library (constitutional requirement)
 **Rationale**:
-- Comprehensive component set
-- Good TypeScript support
-- Consistent design system
-- Accessibility features built-in
-- Active development and maintenance
+- Constitutional mandate for standardized toolchain
+- Comprehensive component set with modern design
+- Excellent TypeScript support out of the box
+- Built-in accessibility features
+- Integrated form handling and validation
+- Dark theme support
+- Active development and strong documentation
 
 **Alternatives considered**:
-- Ant Design: Good but more enterprise-focused
+- Material-UI (MUI): Good but not constitutional standard
+- Ant Design: More enterprise-focused
 - Chakra UI: Simpler but less comprehensive
-- Custom CSS: Too much development overhead
 
 ### Testing Strategy
 **Decision**: Jest + React Testing Library + Cypress

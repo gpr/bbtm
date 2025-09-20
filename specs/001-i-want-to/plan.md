@@ -34,8 +34,8 @@
 Web application for managing Blood Bowl tournaments with React frontend and Firebase backend. Allows tournament organizers to create tournaments and coaches to register with their team information. Supports both registered user accounts and anonymous registration forms. Core functionality includes user authentication, tournament creation, and coach registration with mandatory fields (alias, email, team race) and optional fields (full name, NAF number, team name).
 
 ## Technical Context
-**Language/Version**: JavaScript/TypeScript with React 18+ for frontend
-**Primary Dependencies**: React, Firebase (Authentication, Firestore), React Router, Material-UI or similar component library
+**Language/Version**: TypeScript with React 18+ for frontend (constitutional requirement)
+**Primary Dependencies**: React, Firebase (Authentication, Firestore), React Router, Mantine UI components
 **Storage**: Firebase Firestore for data persistence
 **Testing**: Jest with React Testing Library for frontend unit tests, Cypress for integration tests
 **Target Platform**: Modern web browsers (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
@@ -43,25 +43,27 @@ Web application for managing Blood Bowl tournaments with React frontend and Fire
 **Performance Goals**: <2s initial page load, <500ms form submissions, responsive design for mobile and desktop
 **Constraints**: Firebase free tier limitations, client-side data validation, offline capability not required for MVP
 **Scale/Scope**: 100+ tournaments, 1000+ coaches per tournament, 5-10 key user interfaces
+**Build Tools**: pnpm (package management), Vite (build), Prettier (formatting), Husky (git hooks), Storybook (component docs)
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Constitution Status**: Constitution file is template-only, applying general software development principles:
+**Constitution Status**: Blood Bowl Tournament Management Constitution v1.0.0
 
-✅ **Simplicity**: Single-page application with clear user flows
-✅ **Test-First**: TDD approach with contract tests before implementation
-✅ **Library-First**: Using established libraries (React, Firebase, Material-UI)
-✅ **Clear Interfaces**: REST-like Firebase operations with defined data models
-✅ **Observability**: Firebase Analytics and console logging for debugging
+✅ **I. Test-First Development**: TDD approach with contract tests before implementation, integration tests for all quickstart scenarios
+✅ **II. Mandatory Technology Stack**: TypeScript, pnpm, Vite, Prettier, Husky, Storybook, Jest, Mantine UI, Firebase backend
+✅ **III. Component-First Architecture**: UI features as isolated, testable components with Storybook documentation
+✅ **IV. Firebase Integration Standards**: Proper SDK usage, comprehensive security rules, real-time listener management
+✅ **V. Type Safety and Validation**: TypeScript strict mode, Zod validation schemas, no any types
 
 **Post-Design Re-evaluation**:
-✅ **Data Model**: Clean entity separation (User, Tournament, CoachRegistration)
-✅ **API Contracts**: Well-defined interfaces with proper error handling
-✅ **Testing Strategy**: Comprehensive test scenarios covering all user flows
-✅ **Security**: Proper Firebase security rules and client-side validation
+✅ **Technology Compliance**: All mandatory tools specified in technical context
+✅ **Testing Strategy**: Contract tests before implementation, comprehensive test scenarios
+✅ **Component Design**: Atomic design principles with clear separation of concerns
+✅ **Type Safety**: Full TypeScript interfaces with Zod validation
+✅ **Firebase Standards**: Security rules, error handling, offline considerations
 
-**No constitutional violations identified** - design follows established patterns and best practices.
+**No constitutional violations identified** - design fully compliant with all constitutional requirements.
 
 ## Project Structure
 
