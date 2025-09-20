@@ -51,7 +51,7 @@
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
-**CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
+### CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation
 
 ### Contract Tests [P]
 
@@ -230,7 +230,7 @@ Task: "Build optimization and bundle analysis"
 
 ## Validation Checklist
 
-**GATE: All items verified before task execution**
+### GATE: All items verified before task execution
 
 - [x] All contracts have corresponding tests (T009-T018 cover all endpoints)
 - [x] All entities have model tasks (T025-T029 cover User, Tournament, Registration, enums)
