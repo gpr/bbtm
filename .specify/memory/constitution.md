@@ -1,50 +1,51 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: [template] → 1.0.0 (initial constitution)
+- Modified principles: All principles defined from template
+- Added sections: Technology Standards, Development Workflow
+- Removed sections: None
+- Templates requiring updates: ✅ Updated plan-template references
+- Follow-up TODOs: None
+-->
+
+# Blood Bowl Tournament Management Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Test-First Development (NON-NEGOTIABLE)
+TDD mandatory for all features: Tests written → User approved → Tests fail → Then implement. Red-Green-Refactor cycle strictly enforced. Contract tests MUST be written before any API implementation. Integration tests required for all user workflows defined in quickstart scenarios.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Mandatory Technology Stack
+Frontend development MUST use the standardized toolchain: TypeScript for type safety, pnpm for package management, Vite for build tooling, Prettier for code formatting, Husky for git hooks, Storybook for component documentation, Jest for unit testing, and Mantine for UI components. Firebase provides backend services (Authentication, Firestore, Hosting). Deviations require architectural justification.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Component-First Architecture
+Every UI feature starts as an isolated, testable component. Components MUST be self-contained with clear props interfaces, documented in Storybook, and independently testable. Clear separation between presentation components and data-fetching logic. Reusable components follow atomic design principles.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Firebase Integration Standards
+All data operations MUST use Firebase SDK with proper error handling and offline capability consideration. Firestore security rules MUST be comprehensive and tested. Authentication flows follow Firebase best practices with proper token management. Real-time listeners MUST include proper cleanup and connection state handling.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Type Safety and Validation
+TypeScript strict mode enforced throughout codebase. All API interfaces defined with TypeScript and validated with Zod schemas. Client-side validation provides immediate feedback; server-side validation via Firestore rules ensures data integrity. No `any` types allowed without explicit justification.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technology Standards
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+All frontend projects MUST adhere to the standardized technology stack:
+- **Language**: TypeScript with strict configuration
+- **Package Manager**: pnpm for consistent dependency management
+- **Build Tool**: Vite for fast development and optimized builds
+- **Code Quality**: Prettier for formatting, ESLint for linting
+- **Git Workflow**: Husky for pre-commit hooks and conventional commits
+- **Component Documentation**: Storybook for isolated component development
+- **Testing**: Jest for unit tests, React Testing Library for component tests
+- **UI Framework**: Mantine for consistent design system and accessibility
+- **Backend**: Firebase (Authentication, Firestore, Hosting, Analytics)
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Code review requirements: All changes require PR review with constitution compliance verification. Pre-commit hooks enforce formatting, linting, and test execution. Feature branches follow `###-feature-name` convention. Conventional commits required for clear change tracking. Breaking changes require major version increment and migration documentation.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices. Amendments require documented justification, team approval, and coordinated updates to all dependent templates and workflows. All PRs must verify compliance with these principles. Complexity that violates simplicity principles must be justified in the Complexity Tracking section of feature plans. Runtime development guidance documented in agent-specific files (CLAUDE.md, etc.) supplements but cannot override constitutional requirements.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-09-20 | **Last Amended**: 2025-09-20
