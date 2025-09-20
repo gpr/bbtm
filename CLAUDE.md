@@ -3,9 +3,10 @@
 Auto-generated from all feature plans. Last updated: 2025-09-20
 
 ## Active Technologies
-- JavaScript/TypeScript with React 18+ (001-i-want-to)
-- Firebase (Authentication, Firestore) (001-i-want-to)
-- Material-UI for components (001-i-want-to)
+- TypeScript with React 18+ (001-i-want-to) - Constitutional requirement
+- Firebase (Authentication, Firestore, Hosting) (001-i-want-to)
+- Mantine UI components (001-i-want-to) - Constitutional requirement
+- pnpm + Vite + Prettier + Husky + Storybook (001-i-want-to) - Constitutional requirements
 - Jest + React Testing Library + Cypress (001-i-want-to)
 
 ## Project Structure
@@ -28,30 +29,36 @@ specs/
 
 ## Commands
 ```bash
-# Development
-npm run dev           # Start development server
-npm run build         # Build for production
-npm run test          # Run tests
-npm run test:e2e      # Run Cypress tests
+# Development (Constitutional requirements: pnpm + Vite)
+pnpm dev              # Start Vite development server
+pnpm build            # Build for production
+pnpm test             # Run Jest tests
+pnpm test:e2e         # Run Cypress tests
+pnpm storybook        # Start Storybook component documentation
+pnpm format           # Run Prettier formatting
 
 # Firebase
 firebase emulators:start  # Start Firebase emulators
 firebase deploy           # Deploy to Firebase hosting
 ```
 
-## Code Style
-- TypeScript for type safety
+## Code Style (Constitutional Requirements)
+- TypeScript strict mode enforced (no any types without justification)
 - React functional components with hooks
-- Material-UI for consistent design
+- Mantine UI components for consistent design and accessibility
 - React Hook Form + Zod for form validation
 - Firebase SDK for backend operations
+- Prettier for code formatting (pre-commit hook)
+- Conventional commits enforced via Husky
 
-## Architecture Patterns
+## Architecture Patterns (Constitutional Requirements)
+- Component-First: Isolated, testable components documented in Storybook
 - Context + useReducer for state management
-- Custom hooks for Firebase operations
+- Custom hooks for Firebase operations with proper cleanup
 - Error boundaries for error handling
 - Route-based code splitting
-- TDD approach with contract tests first
+- TDD approach: Contract tests → Implementation (NON-NEGOTIABLE)
+- Type safety: TypeScript strict + Zod validation
 
 ## Recent Changes
 - 001-i-want-to: Added Blood Bowl tournament management system with React + Firebase
