@@ -40,14 +40,14 @@
 
 ## Phase 3.1: Setup and Infrastructure
 
-- [ ] T001 Create project structure per implementation plan (frontend/, docs/, .github/)
-- [ ] T002 Initialize React project with Vite, TypeScript, and pnpm
-- [ ] T003 [P] Configure ESLint, Prettier, and Husky git hooks
-- [ ] T004 [P] Setup Mantine UI dependencies and provider in frontend/src/main.tsx
-- [ ] T005 [P] Configure Firebase project and SDK in frontend/src/config/firebase.ts
-- [ ] T006 [P] Setup Vitest and testing environment in frontend/vitest.config.ts
-- [ ] T007 [P] Configure React Router setup in frontend/src/App.tsx
-- [ ] T008 [P] Setup Storybook for component documentation
+- [X] T001 Create project structure per implementation plan (frontend/, docs/, .github/)
+- [X] T002 Initialize React project with Vite, TypeScript, and pnpm
+- [X] T003 [P] Configure ESLint, Prettier, and Husky git hooks
+- [X] T004 [P] Setup Mantine UI dependencies and provider in frontend/src/main.tsx
+- [X] T005 [P] Configure Firebase project and SDK in frontend/src/config/firebase.ts
+- [X] T006 [P] Setup Vitest and testing environment in frontend/vitest.config.ts
+- [X] T007 [P] Configure React Router setup in frontend/src/App.tsx
+- [X] T008 [P] Setup Storybook for component documentation
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
@@ -55,25 +55,25 @@
 
 ### Contract Tests [P]
 
-- [ ] T009 [P] Contract test POST /auth/register in frontend/tests/contract/auth-register.test.ts
-- [ ] T010 [P] Contract test POST /auth/login in frontend/tests/contract/auth-login.test.ts
-- [ ] T011 [P] Contract test GET /tournaments in frontend/tests/contract/tournaments-list.test.ts
-- [ ] T012 [P] Contract test POST /tournaments in frontend/tests/contract/tournaments-create.test.ts
-- [ ] T013 [P] Contract test GET /tournaments/:id in frontend/tests/contract/tournaments-get.test.ts
-- [ ] T014 [P] Contract test PUT /tournaments/:id in frontend/tests/contract/tournaments-update.test.ts
-- [ ] T015 [P] Contract test DELETE /tournaments/:id in frontend/tests/contract/tournaments-delete.test.ts
-- [ ] T016 [P] Contract test POST /tournaments/:id/registrations in frontend/tests/contract/registrations-create.test.ts
-- [ ] T017 [P] Contract test GET /tournaments/:id/registrations in frontend/tests/contract/registrations-list.test.ts
-- [ ] T018 [P] Contract test PUT /tournaments/:id/registrations/:id in frontend/tests/contract/registrations-update.test.ts
+- [X] T009 [P] Contract test POST /auth/register in frontend/tests/contract/auth-register.test.ts
+- [X] T010 [P] Contract test POST /auth/login in frontend/tests/contract/auth-login.test.ts
+- [X] T011 [P] Contract test GET /tournaments in frontend/tests/contract/tournaments-list.test.ts
+- [X] T012 [P] Contract test POST /tournaments in frontend/tests/contract/tournaments-create.test.ts
+- [X] T013 [P] Contract test GET /tournaments/:id in frontend/tests/contract/tournaments-get.test.ts
+- [X] T014 [P] Contract test PUT /tournaments/:id in frontend/tests/contract/tournaments-update.test.ts
+- [X] T015 [P] Contract test DELETE /tournaments/:id in frontend/tests/contract/tournaments-delete.test.ts
+- [X] T016 [P] Contract test POST /tournaments/:id/registrations in frontend/tests/contract/registrations-create.test.ts
+- [X] T017 [P] Contract test GET /tournaments/:id/registrations in frontend/tests/contract/registrations-list.test.ts
+- [X] T018 [P] Contract test PUT /tournaments/:id/registrations/:id in frontend/tests/contract/registrations-update.test.ts
 
 ### Integration Tests [P]
 
-- [ ] T019 [P] Integration test user registration workflow in frontend/tests/integration/user-registration.test.ts
-- [ ] T020 [P] Integration test tournament creation workflow in frontend/tests/integration/tournament-creation.test.ts
-- [ ] T021 [P] Integration test registered coach registration in frontend/tests/integration/coach-registration-user.test.ts
-- [ ] T022 [P] Integration test anonymous coach registration in frontend/tests/integration/coach-registration-anon.test.ts
-- [ ] T023 [P] Integration test tournament management in frontend/tests/integration/tournament-management.test.ts
-- [ ] T024 [P] Integration test error handling and validation in frontend/tests/integration/error-handling.test.ts
+- [X] T019 [P] Integration test user registration workflow in frontend/tests/integration/user-registration.test.ts
+- [X] T020 [P] Integration test tournament creation workflow in frontend/tests/integration/tournament-creation.test.ts
+- [X] T021 [P] Integration test registered coach registration in frontend/tests/integration/coach-registration-user.test.ts
+- [X] T022 [P] Integration test anonymous coach registration in frontend/tests/integration/coach-registration-anon.test.ts
+- [X] T023 [P] Integration test tournament management in frontend/tests/integration/tournament-management.test.ts
+- [X] T024 [P] Integration test error handling and validation in frontend/tests/integration/error-handling.test.ts
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
