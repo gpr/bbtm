@@ -178,7 +178,7 @@ ios/ or android/
    - Project initialization (Vite + React + TypeScript)
    - Firebase configuration and setup
    - Development tooling (ESLint, Prettier, testing)
-   - CI/CD pipeline setup
+   - CI/CD pipeline setup with Render deployment
 
 2. **Contract Test Tasks** (from contracts/api-contracts.md):
    - Authentication contract tests [P]
@@ -204,7 +204,14 @@ ios/ or android/
    - Registration form components [P]
    - Layout and navigation components [P]
 
-6. **Integration Test Tasks** (from quickstart.md scenarios):
+6. **Deployment and Infrastructure Tasks**:
+   - Render web service configuration [P]
+   - GitHub Actions CI/CD pipeline setup [P]
+   - Environment variable configuration for Render [P]
+   - Production build optimization and testing [P]
+   - Domain configuration and SSL setup [P]
+
+7. **Integration Test Tasks** (from quickstart.md scenarios):
    - User registration and tournament creation workflow
    - Registered user coach registration workflow
    - Anonymous coach registration workflow
@@ -215,13 +222,15 @@ ios/ or android/
 1. **Phase A**: Setup and contract tests (parallel execution)
 2. **Phase B**: Data models and services (dependency order)
 3. **Phase C**: UI components (parallel execution where possible)
-4. **Phase D**: Integration tests and end-to-end validation
+4. **Phase D**: Deployment infrastructure (parallel execution)
+5. **Phase E**: Integration tests and end-to-end validation
 
 **Dependency Management**:
 - Contract tests must pass before implementation
 - Data models before services before UI
 - Core services before dependent components
-- Integration tests after all components complete
+- Deployment infrastructure after UI components
+- Integration tests after deployment setup complete
 
 **Parallel Execution Markers**:
 - [P] for tasks that can run independently
@@ -229,16 +238,19 @@ ios/ or android/
 - Resource allocation for optimal development flow
 
 **Estimated Output**:
-- 35-40 numbered tasks in tasks.md
-- 4 distinct phases with clear gates
+- 40-45 numbered tasks in tasks.md
+- 5 distinct phases with clear gates
 - Mix of parallel and sequential execution
 - Complete test coverage before implementation
+- Production-ready deployment pipeline
 
 **Quality Gates**:
 - All contract tests passing before Phase B
 - All unit tests passing before Phase C
-- All integration tests passing before Phase D
-- Performance validation in Phase D
+- All component tests passing before Phase D
+- Deployment pipeline functional before Phase E
+- All integration tests passing before production deployment
+- Performance validation in Phase E
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 
