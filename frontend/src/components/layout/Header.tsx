@@ -1,7 +1,6 @@
 // T040 [P] Navigation and layout components
-import { useState } from 'react';
 import {
-  Header as MantineHeader,
+  AppShell,
   Group,
   Button,
   UnstyledButton,
@@ -24,7 +23,7 @@ import {
   IconHome,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../../types/user';
+import type { User } from '../../types/user';
 import { authService } from '../../services/auth.service';
 
 interface HeaderProps {
@@ -65,7 +64,7 @@ export function Header({ user, onLogout }: HeaderProps) {
 
   return (
     <>
-      <MantineHeader height={60} px="md">
+      <AppShell.Header px="md">
         <Group justify="space-between" h="100%">
           {/* Logo */}
           <UnstyledButton onClick={() => handleNavigate('/')}>
@@ -157,7 +156,7 @@ export function Header({ user, onLogout }: HeaderProps) {
             size="sm"
           />
         </Group>
-      </MantineHeader>
+      </AppShell.Header>
 
       {/* Mobile Drawer */}
       <Drawer

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { User as FirebaseUser } from 'firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
 import { Layout } from './components/layout';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
 import { Dashboard } from './pages/Dashboard';
 import { TournamentsPage, TournamentDetailPage, CreateTournamentPage } from './pages/tournaments';
 import { AuthPage } from './pages/auth/AuthPage';
-import { User } from './types/user';
+import type { User } from './types/user';
 import { authService } from './services/auth.service';
 import { errorService } from './services/error.service';
 import { Notifications } from '@mantine/notifications';
@@ -21,7 +21,7 @@ function HomePage() {
 
   return (
     <Container size="lg" py="xl">
-      <Stack align="center" spacing="xl">
+      <Stack align="center" gap="xl">
         <div style={{ textAlign: 'center' }}>
           <Title order={1} size="3rem" mb="md">
             Blood Bowl Tournament Management
@@ -31,7 +31,7 @@ function HomePage() {
           </Text>
         </div>
 
-        <Stack align="center" spacing="md">
+        <Stack align="center" gap="md">
           <Button
             size="lg"
             onClick={() => navigate('/tournaments')}
@@ -52,7 +52,7 @@ function HomePage() {
           <Text size="lg" fw={500} mb="md">
             Features
           </Text>
-          <Stack spacing="sm">
+          <Stack gap="sm">
             <Text>🏆 Create and manage tournaments</Text>
             <Text>👥 Register coaches for tournaments</Text>
             <Text>📊 Track registrations and participants</Text>
@@ -71,7 +71,7 @@ function NotFoundPage() {
 
   return (
     <Container size="sm" py="xl">
-      <Stack align="center" spacing="xl">
+      <Stack align="center" gap="xl">
         <div style={{ textAlign: 'center' }}>
           <Title order={1} size="6rem" c="dimmed">
             404
@@ -120,7 +120,7 @@ export default function App() {
             const userData = {
               id: firebaseUser.uid,
               email: firebaseUser.email!,
-              displayName: firebaseUser.displayName,
+              displayName: firebaseUser.displayName || undefined,
               createdAt: new Date() as any,
               updatedAt: new Date() as any,
               isActive: true,

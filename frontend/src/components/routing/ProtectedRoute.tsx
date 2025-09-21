@@ -1,7 +1,7 @@
 // T044: Protected route components and auth guards
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { User } from '../../types/user';
+import type { User } from '../../types/user';
 
 interface ProtectedRouteProps {
   children: ReactNode;

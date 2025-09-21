@@ -4,10 +4,8 @@ import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { TournamentDetail } from '../../components/tournaments/TournamentDetail';
 import { RegistrationForm } from '../../components/registrations/RegistrationForm';
-import { Tournament } from '../../types/tournament';
-import { CoachRegistration } from '../../types/registration';
+import type { Tournament } from '../../types/tournament';
 import { tournamentService } from '../../services/tournament.service';
-import { authService } from '../../services/auth.service';
 
 export function TournamentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +13,6 @@ export function TournamentDetailPage() {
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [registrationModalOpened, { open: openRegistration, close: closeRegistration }] = useDisclosure(false);
 
-  const currentUser = authService.getCurrentUser();
 
   const handleRegisterClick = async () => {
     if (!id) return;
@@ -42,7 +39,7 @@ export function TournamentDetailPage() {
     }
   };
 
-  const handleRegistrationSuccess = (registration: CoachRegistration) => {
+  const handleRegistrationSuccess = () => {
     closeRegistration();
     // Refresh the tournament detail page to show updated participant count
     window.location.reload();

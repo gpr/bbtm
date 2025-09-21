@@ -1,7 +1,7 @@
 // T043: Registration pages and forms
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Container, Paper, Stack, Tabs } from '@mantine/core';
+import { Container, Stack, Tabs } from '@mantine/core';
 import { LoginForm } from '../../components/auth/LoginForm';
 import { RegisterForm } from '../../components/auth/RegisterForm';
 
@@ -26,8 +26,8 @@ export function AuthPage() {
 
   return (
     <Container size={420} my={40}>
-      <Stack spacing="lg">
-        <Tabs value={activeTab} onChange={setActiveTab}>
+      <Stack gap="lg">
+        <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'login')}>
           <Tabs.List grow>
             <Tabs.Tab value="login">Sign In</Tabs.Tab>
             <Tabs.Tab value="register">Create Account</Tabs.Tab>

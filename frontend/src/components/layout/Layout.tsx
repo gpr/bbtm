@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { AppShell } from '@mantine/core';
 import { Header } from './Header';
-import { User } from '../../types/user';
+import type { User } from '../../types/user';
 
 interface LayoutProps {
   children: ReactNode;

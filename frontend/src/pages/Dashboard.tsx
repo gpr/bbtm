@@ -15,10 +15,9 @@ import {
 } from '@mantine/core';
 import { IconPlus, IconCalendar, IconUsers, IconTournament } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { Tournament } from '../types/tournament';
-import { User } from '../types/user';
+import type { Tournament } from '../types/tournament';
+import type { User } from '../types/user';
 import { tournamentService } from '../services/tournament.service';
-import { authService } from '../services/auth.service';
 import { errorService } from '../services/error.service';
 import { TournamentList } from '../components/tournaments/TournamentList';
 
@@ -89,7 +88,7 @@ export function Dashboard({ user }: DashboardProps) {
 
   return (
     <Container size="lg">
-      <Stack spacing="xl">
+      <Stack gap="xl">
         {/* Header */}
         <Group justify="space-between" align="flex-start">
           <div>

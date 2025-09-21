@@ -1,5 +1,6 @@
 // T048: Error boundary implementation
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import { Container, Title, Text, Button, Stack, Alert } from '@mantine/core';
 import { IconAlertTriangle, IconRefresh } from '@tabler/icons-react';
 import { errorService } from '../services/error.service';
@@ -42,14 +43,7 @@ export class ErrorBoundary extends Component<Props, State> {
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     // Log error with our error service
-    errorService.logError(error, {
-      component: 'ErrorBoundary',
-      errorInfo,
-      errorId,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-    });
+    errorService.handleError(error, 'ErrorBoundary');
 
     this.setState({
       error,
@@ -81,7 +75,7 @@ export class ErrorBoundary extends Component<Props, State> {
       // Default error UI
       return (
         <Container size="sm" py="xl">
-          <Stack spacing="xl" align="center">
+          <Stack gap="xl" align="center">
             <Alert
               icon={<IconAlertTriangle size={20} />}
               title="Something went wrong"
@@ -109,7 +103,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </Text>
             </div>
 
-            <Stack spacing="md">
+            <Stack gap="md">
               <Button
                 leftSection={<IconRefresh size={16} />}
                 onClick={this.handleRetry}
@@ -171,14 +165,8 @@ export function withErrorBoundary<P extends object>(
 
 // Hook for manual error reporting
 export function useErrorHandler() {
-  const reportError = (error: Error, context?: Record<string, any>) => {
-    errorService.logError(error, {
-      component: 'useErrorHandler',
-      context,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-    });
+  const reportError = (error: Error, _context?: Record<string, any>) => {
+    errorService.handleError(error, 'useErrorHandler');
   };
 
   return { reportError };

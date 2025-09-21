@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Container, Title, Text, Stack } from '@mantine/core';
 import { TournamentForm } from '../../components/tournaments/TournamentForm';
-import { Tournament } from '../../types/tournament';
+import type { Tournament } from '../../types/tournament';
 import { authService } from '../../services/auth.service';
 import { useEffect } from 'react';
 
@@ -29,7 +29,7 @@ export function CreateTournamentPage() {
 
   return (
     <Container size="md">
-      <Stack spacing="xl">
+      <Stack gap="xl">
         <div>
           <Title order={1}>Create Tournament</Title>
           <Text c="dimmed" mt="xs">

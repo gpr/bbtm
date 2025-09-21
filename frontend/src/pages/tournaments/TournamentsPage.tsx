@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 import { IconPlus, IconList, IconWorld } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { Tournament } from '../../types/tournament';
+import type { Tournament } from '../../types/tournament';
 import { TournamentList } from '../../components/tournaments/TournamentList';
 import { authService } from '../../services/auth.service';
 
@@ -31,7 +31,7 @@ export function TournamentsPage() {
 
   return (
     <Container size="lg">
-      <Stack spacing="xl">
+      <Stack gap="xl">
         {/* Header */}
         <Group justify="space-between" align="flex-start">
           <div>
@@ -51,7 +51,7 @@ export function TournamentsPage() {
         </Group>
 
         {/* Tournament Lists */}
-        <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'public')}>
           <Tabs.List>
             <Tabs.Tab value="public" leftSection={<IconWorld size={16} />}>
               Public Tournaments
