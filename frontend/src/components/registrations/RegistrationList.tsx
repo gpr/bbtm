@@ -12,7 +12,6 @@ import {
   Stack,
   Select,
   ActionIcon,
-  Tooltip,
   Menu,
   Modal,
   Paper,
@@ -27,7 +26,7 @@ import {
   IconClock,
   IconUsers,
 } from '@tabler/icons-react';
-import { CoachRegistration } from '../../types/registration';
+import type { CoachRegistration } from '../../types/registration';
 import { RegistrationStatus, REGISTRATION_STATUS_LABELS, getTeamRaceOptions } from '../../types/enums';
 import { registrationService } from '../../services/registration.service';
 import { errorService } from '../../services/error.service';
@@ -152,14 +151,15 @@ export function RegistrationList({
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | any) => {
+    const dateObj = date?.toDate ? date.toDate() : new Date(date);
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    }).format(date);
+    }).format(dateObj);
   };
 
   const statusOptions = [
@@ -204,7 +204,7 @@ export function RegistrationList({
 
   return (
     <Container size="xl">
-      <Stack spacing="md">
+      <Stack gap="md">
         {/* Controls */}
         <Group justify="space-between">
           <Select

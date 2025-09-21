@@ -6,7 +6,6 @@ import {
   Paper,
   TextInput,
   Textarea,
-  NumberInput,
   Switch,
   Button,
   Stack,
@@ -15,10 +14,9 @@ import {
   Alert,
   Divider,
 } from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
 import { IconAlertCircle, IconDeviceFloppy, IconX } from '@tabler/icons-react';
 import { TournamentFormSchema, type TournamentFormInput } from '../../schemas/validation';
-import { Tournament, CreateTournamentRequest, UpdateTournamentRequest } from '../../types/tournament';
+import type { Tournament, CreateTournamentRequest, UpdateTournamentRequest } from '../../types/tournament';
 import { tournamentService } from '../../services/tournament.service';
 import { errorService } from '../../services/error.service';
 
@@ -37,7 +35,6 @@ export function TournamentForm({ tournament, onSuccess, onCancel }: TournamentFo
   const {
     register,
     handleSubmit,
-    control,
     watch,
     setValue,
     formState: { errors },
@@ -48,13 +45,13 @@ export function TournamentForm({ tournament, onSuccess, onCancel }: TournamentFo
       description: tournament?.description || '',
       maxParticipants: tournament?.maxParticipants?.toString() || '',
       registrationDeadline: tournament?.registrationDeadline
-        ? new Date(tournament.registrationDeadline).toISOString().slice(0, 16)
+        ? (tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any)).toISOString().slice(0, 16)
         : '',
       startDate: tournament?.startDate
-        ? new Date(tournament.startDate).toISOString().slice(0, 16)
+        ? (tournament.startDate?.toDate ? tournament.startDate.toDate() : new Date(tournament.startDate as any)).toISOString().slice(0, 16)
         : '',
       endDate: tournament?.endDate
-        ? new Date(tournament.endDate).toISOString().slice(0, 16)
+        ? (tournament.endDate?.toDate ? tournament.endDate.toDate() : new Date(tournament.endDate as any)).toISOString().slice(0, 16)
         : '',
       isPublic: tournament?.isPublic ?? true,
     },
@@ -77,9 +74,9 @@ export function TournamentForm({ tournament, onSuccess, onCancel }: TournamentFo
 
       let result;
       if (isEditing && tournament) {
-        result = await tournamentService.updateTournament(tournament.id, requestData);
+        result = await tournamentService.updateTournament(tournament.id, requestData as UpdateTournamentRequest);
       } else {
-        result = await tournamentService.createTournament(requestData);
+        result = await tournamentService.createTournament(requestData as CreateTournamentRequest);
       }
 
       const tournamentData: Tournament = {
@@ -116,7 +113,7 @@ export function TournamentForm({ tournament, onSuccess, onCancel }: TournamentFo
       </Title>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing="md">
+        <Stack gap="md">
           {error && (
             <Alert
               icon={<IconAlertCircle size="1rem" />}

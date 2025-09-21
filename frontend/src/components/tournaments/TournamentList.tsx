@@ -16,7 +16,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconCalendar, IconUsers, IconSettings, IconEye } from '@tabler/icons-react';
-import { Tournament } from '../../types/tournament';
+import type { Tournament } from '../../types/tournament';
 import { tournamentService } from '../../services/tournament.service';
 import { errorService } from '../../services/error.service';
 
@@ -89,13 +89,14 @@ export function TournamentList({
     }
   };
 
-  const formatDate = (date: Date | undefined) => {
+  const formatDate = (date: Date | any | undefined) => {
     if (!date) return 'Not set';
+    const dateObj = date?.toDate ? date.toDate() : new Date(date);
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-    }).format(date);
+    }).format(dateObj);
   };
 
   if (isLoading && tournaments.length === 0) {

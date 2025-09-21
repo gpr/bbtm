@@ -24,8 +24,8 @@ import {
   IconUserPlus,
   IconInfoCircle,
 } from '@tabler/icons-react';
-import { Tournament } from '../../types/tournament';
-import { CoachRegistration } from '../../types/registration';
+import type { Tournament } from '../../types/tournament';
+import type { CoachRegistration } from '../../types/registration';
 import { tournamentService } from '../../services/tournament.service';
 import { registrationService } from '../../services/registration.service';
 import { authService } from '../../services/auth.service';
@@ -104,25 +104,18 @@ export function TournamentDetail({
     }
   };
 
-  const formatDate = (date: Date | undefined) => {
+  const formatDate = (date: Date | any | undefined) => {
     if (!date) return 'Not set';
+    const dateObj = date?.toDate ? date.toDate() : new Date(date);
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    }).format(date);
+    }).format(dateObj);
   };
 
-  const formatDateShort = (date: Date | undefined) => {
-    if (!date) return 'Not set';
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }).format(date);
-  };
 
   const getParticipationRate = () => {
     if (!tournament?.maxParticipants) return 0;
@@ -132,7 +125,10 @@ export function TournamentDetail({
   const canRegister = () => {
     if (!tournament) return false;
     if (!tournament.registrationOpen) return false;
-    if (tournament.registrationDeadline && new Date() > tournament.registrationDeadline) return false;
+    if (tournament.registrationDeadline) {
+      const deadline = tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any);
+      if (new Date() > deadline) return false;
+    }
     if (tournament.maxParticipants && tournament.participantCount >= tournament.maxParticipants) return false;
     return true;
   };
@@ -163,7 +159,7 @@ export function TournamentDetail({
 
   return (
     <Container size="lg">
-      <Stack spacing="lg">
+      <Stack gap="lg">
         {/* Header */}
         <Group justify="space-between" align="flex-start">
           <div>
@@ -231,7 +227,7 @@ export function TournamentDetail({
         </Group>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'details')}>
           <Tabs.List>
             <Tabs.Tab value="details" leftSection={<IconInfoCircle size={16} />}>
               Details
@@ -242,7 +238,7 @@ export function TournamentDetail({
           </Tabs.List>
 
           <Tabs.Panel value="details" pt="md">
-            <Stack spacing="md">
+            <Stack gap="md">
               {/* Description */}
               {tournament.description && (
                 <Card withBorder>
@@ -252,7 +248,7 @@ export function TournamentDetail({
 
               {/* Tournament Info */}
               <Card withBorder>
-                <Stack spacing="sm">
+                <Stack gap="sm">
                   <Title order={3} size="h4">
                     Tournament Information
                   </Title>
@@ -319,7 +315,7 @@ export function TournamentDetail({
                 <Alert color="orange" title="Registration Unavailable">
                   {!tournament.registrationOpen && 'Registration is currently closed for this tournament.'}
                   {tournament.registrationDeadline &&
-                    new Date() > tournament.registrationDeadline &&
+                    new Date() > (tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any)) &&
                     'The registration deadline has passed.'}
                   {tournament.maxParticipants &&
                     tournament.participantCount >= tournament.maxParticipants &&
@@ -331,7 +327,7 @@ export function TournamentDetail({
 
           <Tabs.Panel value="participants" pt="md">
             {isOrganizer ? (
-              <Stack spacing="sm">
+              <Stack gap="sm">
                 {registrations.length === 0 ? (
                   <Text c="dimmed" ta="center" py="xl">
                     No registrations yet

@@ -17,8 +17,8 @@ import {
 import { IconAlertCircle, IconUserPlus, IconX } from '@tabler/icons-react';
 import { RegistrationFormSchema, type RegistrationFormInput } from '../../schemas/validation';
 import { TeamRace, getTeamRaceOptions } from '../../types/enums';
-import { Tournament } from '../../types/tournament';
-import { CoachRegistration } from '../../types/registration';
+import type { Tournament } from '../../types/tournament';
+import type { CoachRegistration } from '../../types/registration';
 import { registrationService } from '../../services/registration.service';
 import { authService } from '../../services/auth.service';
 import { errorService } from '../../services/error.service';
@@ -114,7 +114,7 @@ export function RegistrationForm({
 
   // Check if registration is still open
   const canRegister = tournament.registrationOpen &&
-    (!tournament.registrationDeadline || new Date() <= tournament.registrationDeadline) &&
+    (!tournament.registrationDeadline || new Date() <= (tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : tournament.registrationDeadline)) &&
     (!tournament.maxParticipants || tournament.participantCount < tournament.maxParticipants);
 
   if (!canRegister && !isEditing) {
@@ -129,7 +129,7 @@ export function RegistrationForm({
 
   return (
     <Paper radius="md" p="xl" withBorder>
-      <Stack spacing="lg">
+      <Stack gap="lg">
         {/* Header */}
         <div>
           <Title order={2} mb="xs">
@@ -146,7 +146,7 @@ export function RegistrationForm({
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing="md">
+          <Stack gap="md">
             {error && (
               <Alert
                 icon={<IconAlertCircle size="1rem" />}
@@ -221,7 +221,7 @@ export function RegistrationForm({
 
             {/* Tournament Info */}
             <Alert color="blue" title="Tournament Information" variant="light">
-              <Stack spacing="xs">
+              <Stack gap="xs">
                 <Text size="sm">
                   <strong>Participants:</strong> {tournament.participantCount}
                   {tournament.maxParticipants && ` / ${tournament.maxParticipants}`}
@@ -235,7 +235,7 @@ export function RegistrationForm({
                       day: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit',
-                    }).format(tournament.registrationDeadline)}
+                    }).format(tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any))}
                   </Text>
                 )}
                 {tournament.startDate && (
@@ -245,7 +245,7 @@ export function RegistrationForm({
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
-                    }).format(tournament.startDate)}
+                    }).format(tournament.startDate?.toDate ? tournament.startDate.toDate() : new Date(tournament.startDate as any))}
                   </Text>
                 )}
               </Stack>
