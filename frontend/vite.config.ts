@@ -47,8 +47,6 @@ export default defineConfig(({ mode }) => {
             mantine: ['@mantine/core', '@mantine/hooks', '@mantine/notifications'],
             // Split form libraries
             forms: ['react-hook-form', 'zod'],
-            // Split utility libraries
-            utils: ['date-fns', 'lodash-es'],
           },
         },
       },
