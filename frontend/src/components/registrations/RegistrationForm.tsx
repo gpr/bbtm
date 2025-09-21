@@ -19,6 +19,7 @@ import { RegistrationFormSchema, type RegistrationFormInput } from '../../schema
 import { TeamRace, getTeamRaceOptions } from '../../types/enums';
 import type { Tournament } from '../../types/tournament';
 import type { CoachRegistration } from '../../types/registration';
+import type { Timestamp } from 'firebase/firestore';
 import { registrationService } from '../../services/registration.service';
 import { authService } from '../../services/auth.service';
 import { errorService } from '../../services/error.service';
@@ -95,8 +96,8 @@ export function RegistrationForm({
 
       const registrationData: CoachRegistration = {
         ...result.registration,
-        registeredAt: new Date(result.registration.registeredAt) as any,
-      };
+        registeredAt: new Date(result.registration.registeredAt),
+      } as unknown as CoachRegistration;
 
       errorService.showSuccess(
         isEditing
@@ -104,12 +105,29 @@ export function RegistrationForm({
           : 'Registration submitted successfully!'
       );
       onSuccess?.(registrationData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const appError = errorService.handleError(err, 'RegistrationForm.onSubmit');
       setError(appError.message);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Helper function to format dates consistently
+  const formatDate = (date: Date | Timestamp | string | undefined, options: Intl.DateTimeFormatOptions) => {
+    if (!date) return 'Not set';
+
+    let dateObj: Date;
+    if (date && typeof date === 'object' && 'toDate' in date) {
+      // Firestore Timestamp
+      dateObj = (date as Timestamp).toDate();
+    } else if (date instanceof Date) {
+      dateObj = date;
+    } else {
+      dateObj = new Date(date);
+    }
+
+    return new Intl.DateTimeFormat('en-US', options).format(dateObj);
   };
 
   // Check if registration is still open
@@ -229,23 +247,23 @@ export function RegistrationForm({
                 {tournament.registrationDeadline && (
                   <Text size="sm">
                     <strong>Registration Deadline:</strong>{' '}
-                    {new Intl.DateTimeFormat('en-US', {
+                    {formatDate(tournament.registrationDeadline, {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit',
-                    }).format(tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any))}
+                    })}
                   </Text>
                 )}
                 {tournament.startDate && (
                   <Text size="sm">
                     <strong>Tournament Start:</strong>{' '}
-                    {new Intl.DateTimeFormat('en-US', {
+                    {formatDate(tournament.startDate, {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
-                    }).format(tournament.startDate?.toDate ? tournament.startDate.toDate() : new Date(tournament.startDate as any))}
+                    })}
                   </Text>
                 )}
               </Stack>

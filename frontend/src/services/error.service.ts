@@ -4,7 +4,7 @@ import { FirebaseError } from 'firebase/app';
 export interface AppError {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   timestamp: Date;
   userId?: string;
 }
@@ -153,8 +153,10 @@ export class ErrorService {
   /**
    * Check if error is network-related
    */
-  private isNetworkError(error: any): boolean {
-    if (!error) return false;
+  private isNetworkError(error: unknown): boolean {
+    if (!error || typeof error !== 'object') return false;
+
+    const errorObj = error as Record<string, unknown>;
 
     const networkErrorCodes = [
       'network-request-failed',
@@ -166,12 +168,12 @@ export class ErrorService {
 
     return (
       networkErrorCodes.some(code =>
-        error.code?.includes(code) ||
-        error.message?.includes(code) ||
-        error.name?.includes(code)
+        (typeof errorObj.code === 'string' && errorObj.code.includes(code)) ||
+        (typeof errorObj.message === 'string' && errorObj.message.includes(code)) ||
+        (typeof errorObj.name === 'string' && errorObj.name.includes(code))
       ) ||
-      error.name === 'NetworkError' ||
-      error.type === 'network'
+      errorObj.name === 'NetworkError' ||
+      errorObj.type === 'network'
     );
   }
 

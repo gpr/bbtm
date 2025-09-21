@@ -56,7 +56,7 @@ export function Dashboard({ user }: DashboardProps) {
         activeTournaments: activeTournaments.length,
         totalParticipants,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       errorService.handleError(err, 'Dashboard.loadDashboardData');
     } finally {
       setIsLoading(false);

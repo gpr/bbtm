@@ -57,7 +57,7 @@ export class AuthService {
         },
         token,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -94,7 +94,7 @@ export class AuthService {
         },
         token,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -105,7 +105,7 @@ export class AuthService {
   async logout(): Promise<void> {
     try {
       await signOut(auth);
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -154,7 +154,7 @@ export class AuthService {
         updatedAt: data.updatedAt,
         isActive: data.isActive,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching user profile:', error);
       return null;
     }
@@ -182,7 +182,7 @@ export class AuthService {
           displayName: updates.displayName,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -206,10 +206,12 @@ export class AuthService {
   /**
    * Handle Firebase authentication errors
    */
-  private handleAuthError(error: any): AuthError {
+  private handleAuthError(error: unknown): AuthError {
     console.error('Auth error:', error);
 
-    switch (error.code) {
+    const errorCode = (error as { code?: string }).code;
+
+    switch (errorCode) {
       case 'auth/invalid-email':
         return {
           code: 'INVALID_EMAIL',
@@ -239,7 +241,7 @@ export class AuthService {
       default:
         return {
           code: 'INVALID_EMAIL',
-          message: error.message || 'An unexpected error occurred.',
+          message: (error as Error).message || 'An unexpected error occurred.',
         };
     }
   }

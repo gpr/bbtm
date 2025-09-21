@@ -1,5 +1,5 @@
 // T036 [P] Tournament detail component
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Title,
@@ -26,6 +26,7 @@ import {
 } from '@tabler/icons-react';
 import type { Tournament } from '../../types/tournament';
 import type { CoachRegistration } from '../../types/registration';
+import type { Timestamp } from 'firebase/firestore';
 import { tournamentService } from '../../services/tournament.service';
 import { registrationService } from '../../services/registration.service';
 import { authService } from '../../services/auth.service';
@@ -53,14 +54,7 @@ export function TournamentDetail({
   const currentUser = authService.getCurrentUser();
   const isOrganizer = tournament && currentUser && tournament.organizer === currentUser.uid;
 
-  useEffect(() => {
-    loadTournament();
-    if (isOrganizer) {
-      loadRegistrations();
-    }
-  }, [tournamentId, isOrganizer]);
-
-  const loadTournament = async () => {
+  const loadTournament = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -70,43 +64,60 @@ export function TournamentDetail({
         ...response.tournament,
         // Convert ISO strings back to Date objects
         registrationDeadline: response.tournament.registrationDeadline
-          ? new Date(response.tournament.registrationDeadline) as any
+          ? new Date(response.tournament.registrationDeadline)
           : undefined,
         startDate: response.tournament.startDate
-          ? new Date(response.tournament.startDate) as any
+          ? new Date(response.tournament.startDate)
           : undefined,
         endDate: response.tournament.endDate
-          ? new Date(response.tournament.endDate) as any
+          ? new Date(response.tournament.endDate)
           : undefined,
-        createdAt: new Date(response.tournament.createdAt) as any,
-        updatedAt: new Date(response.tournament.updatedAt) as any,
-      });
-    } catch (err: any) {
+        createdAt: new Date(response.tournament.createdAt),
+        updatedAt: new Date(response.tournament.updatedAt),
+      } as unknown as Tournament);
+    } catch (err: unknown) {
       const appError = errorService.handleError(err, 'TournamentDetail.loadTournament');
       setError(appError.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [tournamentId]);
 
-  const loadRegistrations = async () => {
+  const loadRegistrations = useCallback(async () => {
     if (!isOrganizer) return;
 
     try {
       const response = await registrationService.listRegistrations(tournamentId);
       setRegistrations(response.registrations.map(r => ({
         ...r,
-        registeredAt: new Date(r.registeredAt) as any,
-      })));
-    } catch (err: any) {
+        registeredAt: new Date(r.registeredAt),
+      })) as unknown as CoachRegistration[]);
+    } catch (err: unknown) {
       console.error('Error loading registrations:', err);
       // Don't show error to user for registrations, as it's not critical
     }
-  };
+  }, [tournamentId, isOrganizer]);
 
-  const formatDate = (date: Date | any | undefined) => {
+  useEffect(() => {
+    loadTournament();
+    if (isOrganizer) {
+      loadRegistrations();
+    }
+  }, [loadTournament, loadRegistrations, isOrganizer]);
+
+  const formatDate = (date: Date | Timestamp | string | undefined) => {
     if (!date) return 'Not set';
-    const dateObj = date?.toDate ? date.toDate() : new Date(date);
+
+    let dateObj: Date;
+    if (date && typeof date === 'object' && 'toDate' in date) {
+      // Firestore Timestamp
+      dateObj = (date as Timestamp).toDate();
+    } else if (date instanceof Date) {
+      dateObj = date;
+    } else {
+      dateObj = new Date(date);
+    }
+
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
@@ -126,7 +137,12 @@ export function TournamentDetail({
     if (!tournament) return false;
     if (!tournament.registrationOpen) return false;
     if (tournament.registrationDeadline) {
-      const deadline = tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any);
+      let deadline: Date;
+      if (tournament.registrationDeadline && typeof tournament.registrationDeadline === 'object' && 'toDate' in tournament.registrationDeadline) {
+        deadline = (tournament.registrationDeadline as Timestamp).toDate();
+      } else {
+        deadline = new Date(tournament.registrationDeadline as string);
+      }
       if (new Date() > deadline) return false;
     }
     if (tournament.maxParticipants && tournament.participantCount >= tournament.maxParticipants) return false;
@@ -314,9 +330,15 @@ export function TournamentDetail({
               {!canRegister() && (
                 <Alert color="orange" title="Registration Unavailable">
                   {!tournament.registrationOpen && 'Registration is currently closed for this tournament.'}
-                  {tournament.registrationDeadline &&
-                    new Date() > (tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any)) &&
-                    'The registration deadline has passed.'}
+                  {tournament.registrationDeadline && (() => {
+                    let deadline: Date;
+                    if (tournament.registrationDeadline && typeof tournament.registrationDeadline === 'object' && 'toDate' in tournament.registrationDeadline) {
+                      deadline = (tournament.registrationDeadline as Timestamp).toDate();
+                    } else {
+                      deadline = new Date(tournament.registrationDeadline as string);
+                    }
+                    return new Date() > deadline;
+                  })() && 'The registration deadline has passed.'}
                   {tournament.maxParticipants &&
                     tournament.participantCount >= tournament.maxParticipants &&
                     'This tournament is full.'}

@@ -99,7 +99,7 @@ export class RegistrationService {
           status: data.status,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating registration:', error);
       throw error;
     }
@@ -144,7 +144,7 @@ export class RegistrationService {
           status: data.status,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching registration:', error);
       throw error;
     }
@@ -165,8 +165,8 @@ export class RegistrationService {
     }
 
     try {
-      let q = collection(db, 'tournaments', tournamentId, 'registrations');
-      let queryConstraints: any[] = [];
+      const q = collection(db, 'tournaments', tournamentId, 'registrations');
+      const queryConstraints: Parameters<typeof query>[1][] = [];
 
       // Apply filters
       if (params.status) {
@@ -209,7 +209,7 @@ export class RegistrationService {
         nextCursor,
         hasMore,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error listing registrations:', error);
       throw new Error('Failed to list registrations');
     }
@@ -249,7 +249,7 @@ export class RegistrationService {
         throw new Error('Only organizer can update status');
       }
 
-      const updateData: any = {};
+      const updateData: Record<string, unknown> = {};
 
       // Apply updates
       if (updates.alias !== undefined) {
@@ -262,11 +262,12 @@ export class RegistrationService {
       if (updates.teamName !== undefined) updateData.teamName = updates.teamName;
       if (updates.status !== undefined) updateData.status = updates.status;
 
-      await updateDoc(docRef, updateData);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateDoc(docRef, updateData as any);
 
       // Return updated registration
       return this.getRegistration(tournamentId, registrationId);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating registration:', error);
       throw error;
     }
@@ -303,7 +304,7 @@ export class RegistrationService {
       const tournament = await tournamentService.getTournament(tournamentId);
       const newCount = Math.max(0, tournament.tournament.participantCount - 1);
       await tournamentService.updateParticipantCount(tournamentId, newCount);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting registration:', error);
       throw error;
     }

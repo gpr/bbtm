@@ -1,5 +1,5 @@
 // T035 [P] Tournament list component
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   Text,
@@ -17,6 +17,7 @@ import {
 } from '@mantine/core';
 import { IconCalendar, IconUsers, IconSettings, IconEye } from '@tabler/icons-react';
 import type { Tournament } from '../../types/tournament';
+import type { Timestamp } from 'firebase/firestore';
 import { tournamentService } from '../../services/tournament.service';
 import { errorService } from '../../services/error.service';
 
@@ -39,11 +40,7 @@ export function TournamentList({
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | undefined>();
 
-  useEffect(() => {
-    loadTournaments();
-  }, [showPublicOnly, showUserTournaments]);
-
-  const loadTournaments = async (cursor?: string) => {
+  const loadTournaments = useCallback(async (cursor?: string) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -59,13 +56,13 @@ export function TournamentList({
 
       const tournamentData = response.tournaments.map(t => ({
         ...t,
-        // Convert ISO strings back to Timestamp objects for consistency
-        registrationDeadline: t.registrationDeadline ? new Date(t.registrationDeadline) as any : undefined,
-        startDate: t.startDate ? new Date(t.startDate) as any : undefined,
-        endDate: t.endDate ? new Date(t.endDate) as any : undefined,
-        createdAt: new Date(t.createdAt) as any,
-        updatedAt: new Date(t.updatedAt) as any,
-      }));
+        // Convert ISO strings back to Date objects for consistency
+        registrationDeadline: t.registrationDeadline ? new Date(t.registrationDeadline) : undefined,
+        startDate: t.startDate ? new Date(t.startDate) : undefined,
+        endDate: t.endDate ? new Date(t.endDate) : undefined,
+        createdAt: new Date(t.createdAt),
+        updatedAt: new Date(t.updatedAt),
+      })) as unknown as Tournament[];
 
       if (cursor) {
         setTournaments(prev => [...prev, ...tournamentData]);
@@ -75,13 +72,17 @@ export function TournamentList({
 
       setHasMore(response.hasMore);
       setNextCursor(response.nextCursor);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const appError = errorService.handleError(err, 'TournamentList.loadTournaments');
       setError(appError.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showPublicOnly, showUserTournaments]);
+
+  useEffect(() => {
+    loadTournaments();
+  }, [loadTournaments]);
 
   const loadMore = () => {
     if (hasMore && nextCursor && !isLoading) {
@@ -89,9 +90,19 @@ export function TournamentList({
     }
   };
 
-  const formatDate = (date: Date | any | undefined) => {
+  const formatDate = (date: Date | Timestamp | string | undefined) => {
     if (!date) return 'Not set';
-    const dateObj = date?.toDate ? date.toDate() : new Date(date);
+
+    let dateObj: Date;
+    if (date && typeof date === 'object' && 'toDate' in date) {
+      // Firestore Timestamp
+      dateObj = (date as Timestamp).toDate();
+    } else if (date instanceof Date) {
+      dateObj = date;
+    } else {
+      dateObj = new Date(date);
+    }
+
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',

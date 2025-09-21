@@ -17,6 +17,7 @@ import {
 import { IconAlertCircle, IconDeviceFloppy, IconX } from '@tabler/icons-react';
 import { TournamentFormSchema, type TournamentFormInput } from '../../schemas/validation';
 import type { Tournament, CreateTournamentRequest, UpdateTournamentRequest } from '../../types/tournament';
+import type { Timestamp } from 'firebase/firestore';
 import { tournamentService } from '../../services/tournament.service';
 import { errorService } from '../../services/error.service';
 
@@ -45,13 +46,37 @@ export function TournamentForm({ tournament, onSuccess, onCancel }: TournamentFo
       description: tournament?.description || '',
       maxParticipants: tournament?.maxParticipants?.toString() || '',
       registrationDeadline: tournament?.registrationDeadline
-        ? (tournament.registrationDeadline?.toDate ? tournament.registrationDeadline.toDate() : new Date(tournament.registrationDeadline as any)).toISOString().slice(0, 16)
+        ? (() => {
+            let date: Date;
+            if (tournament.registrationDeadline && typeof tournament.registrationDeadline === 'object' && 'toDate' in tournament.registrationDeadline) {
+              date = (tournament.registrationDeadline as Timestamp).toDate();
+            } else {
+              date = new Date(tournament.registrationDeadline as string);
+            }
+            return date.toISOString().slice(0, 16);
+          })()
         : '',
       startDate: tournament?.startDate
-        ? (tournament.startDate?.toDate ? tournament.startDate.toDate() : new Date(tournament.startDate as any)).toISOString().slice(0, 16)
+        ? (() => {
+            let date: Date;
+            if (tournament.startDate && typeof tournament.startDate === 'object' && 'toDate' in tournament.startDate) {
+              date = (tournament.startDate as Timestamp).toDate();
+            } else {
+              date = new Date(tournament.startDate as string);
+            }
+            return date.toISOString().slice(0, 16);
+          })()
         : '',
       endDate: tournament?.endDate
-        ? (tournament.endDate?.toDate ? tournament.endDate.toDate() : new Date(tournament.endDate as any)).toISOString().slice(0, 16)
+        ? (() => {
+            let date: Date;
+            if (tournament.endDate && typeof tournament.endDate === 'object' && 'toDate' in tournament.endDate) {
+              date = (tournament.endDate as Timestamp).toDate();
+            } else {
+              date = new Date(tournament.endDate as string);
+            }
+            return date.toISOString().slice(0, 16);
+          })()
         : '',
       isPublic: tournament?.isPublic ?? true,
     },
@@ -82,23 +107,23 @@ export function TournamentForm({ tournament, onSuccess, onCancel }: TournamentFo
       const tournamentData: Tournament = {
         ...result.tournament,
         registrationDeadline: result.tournament.registrationDeadline
-          ? new Date(result.tournament.registrationDeadline) as any
+          ? new Date(result.tournament.registrationDeadline)
           : undefined,
         startDate: result.tournament.startDate
-          ? new Date(result.tournament.startDate) as any
+          ? new Date(result.tournament.startDate)
           : undefined,
         endDate: result.tournament.endDate
-          ? new Date(result.tournament.endDate) as any
+          ? new Date(result.tournament.endDate)
           : undefined,
-        createdAt: new Date(result.tournament.createdAt) as any,
-        updatedAt: new Date(result.tournament.updatedAt) as any,
-      };
+        createdAt: new Date(result.tournament.createdAt),
+        updatedAt: new Date(result.tournament.updatedAt),
+      } as unknown as Tournament;
 
       errorService.showSuccess(
         isEditing ? 'Tournament updated successfully!' : 'Tournament created successfully!'
       );
       onSuccess?.(tournamentData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const appError = errorService.handleError(err, 'TournamentForm.onSubmit');
       setError(appError.message);
     } finally {

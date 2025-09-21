@@ -22,17 +22,17 @@ export function TournamentDetailPage() {
       setTournament({
         ...response.tournament,
         registrationDeadline: response.tournament.registrationDeadline
-          ? new Date(response.tournament.registrationDeadline) as any
+          ? new Date(response.tournament.registrationDeadline)
           : undefined,
         startDate: response.tournament.startDate
-          ? new Date(response.tournament.startDate) as any
+          ? new Date(response.tournament.startDate)
           : undefined,
         endDate: response.tournament.endDate
-          ? new Date(response.tournament.endDate) as any
+          ? new Date(response.tournament.endDate)
           : undefined,
-        createdAt: new Date(response.tournament.createdAt) as any,
-        updatedAt: new Date(response.tournament.updatedAt) as any,
-      });
+        createdAt: new Date(response.tournament.createdAt),
+        updatedAt: new Date(response.tournament.updatedAt),
+      } as unknown as Tournament);
       openRegistration();
     } catch (error) {
       console.error('Error loading tournament:', error);

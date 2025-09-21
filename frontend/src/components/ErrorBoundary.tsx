@@ -165,7 +165,7 @@ export function withErrorBoundary<P extends object>(
 
 // Hook for manual error reporting
 export function useErrorHandler() {
-  const reportError = (error: Error, _context?: Record<string, any>) => {
+  const reportError = (error: Error) => {
     errorService.handleError(error, 'useErrorHandler');
   };
 

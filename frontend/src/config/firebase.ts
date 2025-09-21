@@ -25,7 +25,7 @@ if (import.meta.env.DEV) {
   try {
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectFirestoreEmulator(db, 'localhost', 8080);
-  } catch (error) {
+  } catch {
     console.log('Emulators already connected or not available');
   }
 }

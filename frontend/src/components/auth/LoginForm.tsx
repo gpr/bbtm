@@ -41,8 +41,8 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
     try {
       await authService.login(data);
       onSuccess?.();
-    } catch (err: any) {
-      setError(err.message || 'Login failed');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Login failed');
     } finally {
       setIsLoading(false);
     }

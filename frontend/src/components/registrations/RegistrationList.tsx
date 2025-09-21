@@ -1,5 +1,5 @@
 // T039 [P] Registration list component
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Table,
   Badge,
@@ -28,6 +28,7 @@ import {
 } from '@tabler/icons-react';
 import type { CoachRegistration } from '../../types/registration';
 import { RegistrationStatus, REGISTRATION_STATUS_LABELS, getTeamRaceOptions } from '../../types/enums';
+import type { Timestamp } from 'firebase/firestore';
 import { registrationService } from '../../services/registration.service';
 import { errorService } from '../../services/error.service';
 
@@ -53,11 +54,7 @@ export function RegistrationList({
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [registrationToDelete, setRegistrationToDelete] = useState<CoachRegistration | null>(null);
 
-  useEffect(() => {
-    loadRegistrations();
-  }, [tournamentId, statusFilter]);
-
-  const loadRegistrations = async () => {
+  const loadRegistrations = useCallback(async () => {
     if (!isOrganizer) return;
 
     try {
@@ -71,16 +68,20 @@ export function RegistrationList({
       setRegistrations(
         response.registrations.map(r => ({
           ...r,
-          registeredAt: new Date(r.registeredAt) as any,
-        }))
+          registeredAt: new Date(r.registeredAt),
+        })) as unknown as CoachRegistration[]
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       const appError = errorService.handleError(err, 'RegistrationList.loadRegistrations');
       setError(appError.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [tournamentId, statusFilter, isOrganizer]);
+
+  useEffect(() => {
+    loadRegistrations();
+  }, [loadRegistrations]);
 
   const handleStatusUpdate = async (registrationId: string, newStatus: RegistrationStatus) => {
     try {
@@ -95,7 +96,7 @@ export function RegistrationList({
       );
 
       errorService.showSuccess('Registration status updated successfully!');
-    } catch (err: any) {
+    } catch (err: unknown) {
       errorService.handleError(err, 'RegistrationList.handleStatusUpdate');
     }
   };
@@ -113,7 +114,7 @@ export function RegistrationList({
       setRegistrations(prev => prev.filter(reg => reg.id !== registrationToDelete.id));
       errorService.showSuccess('Registration deleted successfully!');
       onDeleteRegistration?.(registrationToDelete.id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       errorService.handleError(err, 'RegistrationList.handleDeleteConfirm');
     } finally {
       setDeleteModalOpen(false);
@@ -151,8 +152,18 @@ export function RegistrationList({
     }
   };
 
-  const formatDate = (date: Date | any) => {
-    const dateObj = date?.toDate ? date.toDate() : new Date(date);
+  const formatDate = (date: Date | Timestamp | string) => {
+    let dateObj: Date;
+
+    if (date && typeof date === 'object' && 'toDate' in date) {
+      // Firestore Timestamp
+      dateObj = (date as Timestamp).toDate();
+    } else if (date instanceof Date) {
+      dateObj = date;
+    } else {
+      dateObj = new Date(date);
+    }
+
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',

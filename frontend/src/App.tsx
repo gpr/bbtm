@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import type { User as FirebaseUser } from 'firebase/auth';
+import { Timestamp } from 'firebase/firestore';
 import { Layout } from './components/layout';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
 import { Dashboard } from './pages/Dashboard';
@@ -121,8 +122,8 @@ export default function App() {
               id: firebaseUser.uid,
               email: firebaseUser.email!,
               displayName: firebaseUser.displayName || undefined,
-              createdAt: new Date() as any,
-              updatedAt: new Date() as any,
+              createdAt: Timestamp.fromDate(new Date()),
+              updatedAt: Timestamp.fromDate(new Date()),
               isActive: true,
             };
             setUser(userData);

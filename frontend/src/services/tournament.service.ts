@@ -87,7 +87,7 @@ export class TournamentService {
           updatedAt: data.updatedAt.toDate().toISOString(),
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating tournament:', error);
       throw new Error('Failed to create tournament');
     }
@@ -131,9 +131,9 @@ export class TournamentService {
           updatedAt: data.updatedAt.toDate().toISOString(),
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching tournament:', error);
-      if (error.message === 'Tournament not found' || error.message === 'Access denied') {
+      if ((error as Error).message === 'Tournament not found' || (error as Error).message === 'Access denied') {
         throw error;
       }
       throw new Error('Failed to fetch tournament');
@@ -145,8 +145,8 @@ export class TournamentService {
    */
   async listTournaments(params: TournamentQueryParams = {}): Promise<TournamentListResponse> {
     try {
-      let q = collection(db, this.collectionName);
-      let queryConstraints: any[] = [];
+      const q = collection(db, this.collectionName);
+      const queryConstraints: Parameters<typeof query>[1][] = [];
 
       // Apply filters
       if (params.public !== undefined) {
@@ -206,7 +206,7 @@ export class TournamentService {
         nextCursor,
         hasMore,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error listing tournaments:', error);
       throw new Error('Failed to list tournaments');
     }
@@ -237,7 +237,7 @@ export class TournamentService {
         throw new Error('Only organizer can update tournament');
       }
 
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         updatedAt: serverTimestamp(),
       };
 
@@ -266,13 +266,14 @@ export class TournamentService {
           : null;
       }
 
-      await updateDoc(docRef, updateData);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateDoc(docRef, updateData as any);
 
       // Return updated tournament
       return this.getTournament(tournamentId);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating tournament:', error);
-      if (error.message === 'Tournament not found' || error.message === 'Only organizer can update tournament') {
+      if ((error as Error).message === 'Tournament not found' || (error as Error).message === 'Only organizer can update tournament') {
         throw error;
       }
       throw new Error('Failed to update tournament');
@@ -304,9 +305,9 @@ export class TournamentService {
       // TODO: Delete all registrations for this tournament
       // This would be done in a Cloud Function in production
       await deleteDoc(docRef);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting tournament:', error);
-      if (error.message === 'Tournament not found' || error.message === 'Only organizer can delete tournament') {
+      if ((error as Error).message === 'Tournament not found' || (error as Error).message === 'Only organizer can delete tournament') {
         throw error;
       }
       throw new Error('Failed to delete tournament');
@@ -323,7 +324,7 @@ export class TournamentService {
         participantCount: count,
         updatedAt: serverTimestamp(),
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating participant count:', error);
       throw new Error('Failed to update participant count');
     }
@@ -398,7 +399,7 @@ export class TournamentService {
     callback: (tournaments: Tournament[]) => void
   ): Unsubscribe {
     const q = collection(db, this.collectionName);
-    const queryConstraints: any[] = [];
+    const queryConstraints: Parameters<typeof query>[1][] = [];
 
     // Apply filters
     if (params.public !== undefined) {
