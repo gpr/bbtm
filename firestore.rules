@@ -1,0 +1,103 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users collection - users can read/write their own documents
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Tournaments collection
+    match /tournaments/{tournamentId} {
+      // Anyone can read tournaments (public data)
+      allow read: if true;
+
+      // Only authenticated users can create tournaments
+      allow create: if request.auth != null
+        && request.auth.uid == resource.data.organizerId
+        && validateTournamentCreate();
+
+      // Only organizers can update/delete their tournaments
+      allow update, delete: if request.auth != null
+        && request.auth.uid == resource.data.organizerId
+        && validateTournamentUpdate();
+    }
+
+    // Registrations collection
+    match /registrations/{registrationId} {
+      // Anyone can read registrations (public data)
+      allow read: if true;
+
+      // Authenticated users can create registrations
+      allow create: if validateRegistrationCreate();
+
+      // Only registration owners or tournament organizers can update/delete
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == getTournamentOrganizer(resource.data.tournamentId)
+      );
+    }
+
+    // Helper functions
+    function validateTournamentCreate() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['name', 'description', 'organizerId', 'maxParticipants', 'registrationDeadline', 'startDate', 'endDate', 'status', 'format', 'isPublic', 'createdAt', 'updatedAt'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.description is string && data.description.size() <= 1000
+        && data.organizerId is string
+        && data.maxParticipants is int && data.maxParticipants > 0 && data.maxParticipants <= 1000
+        && data.registrationDeadline is timestamp
+        && data.startDate is timestamp
+        && data.endDate is timestamp
+        && data.status in ['draft', 'registration_open', 'registration_closed', 'in_progress', 'completed', 'cancelled']
+        && data.format in ['single_elimination', 'round_robin', 'swiss']
+        && data.isPublic is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function validateTournamentUpdate() {
+      let data = request.resource.data;
+      let existing = resource.data;
+      return data.keys().hasAll(['name', 'description', 'organizerId', 'maxParticipants', 'registrationDeadline', 'startDate', 'endDate', 'status', 'format', 'isPublic', 'createdAt', 'updatedAt'])
+        && data.organizerId == existing.organizerId // Can't change organizer
+        && data.createdAt == existing.createdAt // Can't change creation date
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.description is string && data.description.size() <= 1000
+        && data.maxParticipants is int && data.maxParticipants > 0 && data.maxParticipants <= 1000
+        && data.registrationDeadline is timestamp
+        && data.startDate is timestamp
+        && data.endDate is timestamp
+        && data.status in ['draft', 'registration_open', 'registration_closed', 'in_progress', 'completed', 'cancelled']
+        && data.format in ['single_elimination', 'round_robin', 'swiss']
+        && data.isPublic is bool
+        && data.updatedAt is timestamp;
+    }
+
+    function validateRegistrationCreate() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['tournamentId', 'coachName', 'teamName', 'teamRace', 'contactEmail', 'notes', 'isAnonymous', 'createdAt', 'updatedAt'])
+        && data.tournamentId is string
+        && data.coachName is string && data.coachName.size() > 0 && data.coachName.size() <= 100
+        && data.teamName is string && data.teamName.size() > 0 && data.teamName.size() <= 100
+        && data.teamRace is string && data.teamRace in [
+          'amazon', 'chaos_chosen', 'chaos_dwarf', 'chaos_renegade', 'dark_elf',
+          'dwarf', 'elven_union', 'goblin', 'halfling', 'high_elf', 'human',
+          'imperial_nobility', 'khorne', 'lizardman', 'necromantic_horror',
+          'norse', 'nurgle', 'ogre', 'old_world_alliance', 'orc', 'shambling_undead',
+          'skaven', 'snotling', 'tomb_kings', 'underworld_denizens', 'vampire',
+          'wood_elf'
+        ]
+        && data.contactEmail is string && data.contactEmail.size() > 0 && data.contactEmail.size() <= 255
+        && data.notes is string && data.notes.size() <= 500
+        && data.isAnonymous is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && (data.isAnonymous == true || (request.auth != null && data.userId == request.auth.uid));
+    }
+
+    function getTournamentOrganizer(tournamentId) {
+      return get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.organizerId;
+    }
+  }
+}
