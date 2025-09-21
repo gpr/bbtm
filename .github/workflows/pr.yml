@@ -1,0 +1,148 @@
+name: Pull Request Checks
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  PNPM_VERSION: 10.16.1
+
+jobs:
+  install-and-cache:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    outputs:
+      pnpm-cache-dir: ${{ steps.pnpm-cache.outputs.pnpm-cache-dir }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "pnpm-cache-dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm-cache-dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+  lint-and-typecheck:
+    needs: install-and-cache
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.install-and-cache.outputs.pnpm-cache-dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+  test:
+    needs: install-and-cache
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    strategy:
+      matrix:
+        test-type: [unit, firebase]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+
+      - name: Setup Java (for Firebase emulator)
+        if: matrix.test-type == 'firebase'
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "11"
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ needs.install-and-cache.outputs.pnpm-cache-dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Firebase CLI
+        if: matrix.test-type == 'firebase'
+        run: pnpm add -g firebase-tools
+
+      - name: Start Firebase emulators
+        if: matrix.test-type == 'firebase'
+        run: |
+          firebase emulators:start &
+          sleep 10
+        working-directory: ./apps/web
+
+      - name: Run tests
+        run: |
+          if [ "${{ matrix.test-type }}" = "firebase" ]; then
+            pnpm test:firebase
+          else
+            pnpm test:ci
+          fi
+
+      - name: Stop Firebase emulators
+        if: matrix.test-type == 'firebase'
+        run: pkill -f firebase || true
