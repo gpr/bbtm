@@ -1,36 +1,40 @@
 // T028: TeamRace and RegistrationStatus enums
 
 // Team races available for Blood Bowl tournaments
-export enum TeamRace {
-  HUMAN = 'human',
-  ORC = 'orc',
-  DWARF = 'dwarf',
-  SKAVEN = 'skaven',
-  WOOD_ELF = 'wood_elf',
-  DARK_ELF = 'dark_elf',
-  HIGH_ELF = 'high_elf',
-  CHAOS = 'chaos',
-  UNDEAD = 'undead',
-  HALFLING = 'halfling',
-  GOBLIN = 'goblin',
-  AMAZON = 'amazon',
-  LIZARDMAN = 'lizardman',
-  NORSE = 'norse',
-  NECROMANTIC = 'necromantic',
-  NURGLE = 'nurgle',
-  VAMPIRE = 'vampire',
-  CHAOS_DWARF = 'chaos_dwarf',
-  UNDERWORLD = 'underworld',
-  OGRE = 'ogre',
-}
+export const TeamRace = {
+  HUMAN: 'human',
+  ORC: 'orc',
+  DWARF: 'dwarf',
+  SKAVEN: 'skaven',
+  WOOD_ELF: 'wood_elf',
+  DARK_ELF: 'dark_elf',
+  HIGH_ELF: 'high_elf',
+  CHAOS: 'chaos',
+  UNDEAD: 'undead',
+  HALFLING: 'halfling',
+  GOBLIN: 'goblin',
+  AMAZON: 'amazon',
+  LIZARDMAN: 'lizardman',
+  NORSE: 'norse',
+  NECROMANTIC: 'necromantic',
+  NURGLE: 'nurgle',
+  VAMPIRE: 'vampire',
+  CHAOS_DWARF: 'chaos_dwarf',
+  UNDERWORLD: 'underworld',
+  OGRE: 'ogre',
+} as const;
+
+export type TeamRace = typeof TeamRace[keyof typeof TeamRace];
 
 // Status of a coach's tournament registration
-export enum RegistrationStatus {
-  PENDING = 'pending', // Awaiting confirmation
-  CONFIRMED = 'confirmed', // Registration confirmed
-  CANCELLED = 'cancelled', // Registration cancelled
-  WAITLIST = 'waitlist', // On waiting list (if tournament full)
-}
+export const RegistrationStatus = {
+  PENDING: 'pending', // Awaiting confirmation
+  CONFIRMED: 'confirmed', // Registration confirmed
+  CANCELLED: 'cancelled', // Registration cancelled
+  WAITLIST: 'waitlist', // On waiting list (if tournament full)
+} as const;
+
+export type RegistrationStatus = typeof RegistrationStatus[keyof typeof RegistrationStatus];
 
 // Team race display names for UI
 export const TEAM_RACE_LABELS: Record<TeamRace, string> = {
