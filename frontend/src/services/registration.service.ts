@@ -12,12 +12,11 @@ import {
   orderBy,
   limit as firestoreLimit,
   serverTimestamp,
-  Timestamp,
   onSnapshot,
-  Unsubscribe,
 } from 'firebase/firestore';
+import type { Unsubscribe } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import {
+import type {
   CoachRegistration,
   CreateRegistrationRequest,
   UpdateRegistrationRequest,
@@ -385,7 +384,7 @@ export class RegistrationService {
     tournamentId: string,
     callback: (registrations: CoachRegistration[]) => void
   ): Unsubscribe {
-    const q = collection(db, this.collectionName);
+    const q = collection(db, 'tournaments');
     const finalQuery = query(
       q,
       where('tournamentId', '==', tournamentId),
@@ -401,15 +400,15 @@ export class RegistrationService {
             id: doc.id,
             tournamentId: data.tournamentId,
             userId: data.userId,
-            coachName: data.coachName,
+            alias: data.alias || data.coachName,
+            email: data.email || data.contactEmail,
+            fullName: data.fullName,
+            nafNumber: data.nafNumber,
             teamName: data.teamName,
             teamRace: data.teamRace,
-            contactEmail: data.contactEmail,
-            notes: data.notes,
             status: data.status,
             isAnonymous: data.isAnonymous,
-            createdAt: data.createdAt.toDate().toISOString(),
-            updatedAt: data.updatedAt.toDate().toISOString(),
+            registeredAt: data.registeredAt || data.createdAt,
           };
         });
         callback(registrations);
@@ -431,7 +430,7 @@ export class RegistrationService {
       return () => {}; // Return empty unsubscribe function
     }
 
-    const q = collection(db, this.collectionName);
+    const q = collection(db, 'tournaments');
     const finalQuery = query(
       q,
       where('userId', '==', currentUser.uid),
@@ -447,15 +446,15 @@ export class RegistrationService {
             id: doc.id,
             tournamentId: data.tournamentId,
             userId: data.userId,
-            coachName: data.coachName,
+            alias: data.alias || data.coachName,
+            email: data.email || data.contactEmail,
+            fullName: data.fullName,
+            nafNumber: data.nafNumber,
             teamName: data.teamName,
             teamRace: data.teamRace,
-            contactEmail: data.contactEmail,
-            notes: data.notes,
             status: data.status,
             isAnonymous: data.isAnonymous,
-            createdAt: data.createdAt.toDate().toISOString(),
-            updatedAt: data.updatedAt.toDate().toISOString(),
+            registeredAt: data.registeredAt || data.createdAt,
           };
         });
         callback(registrations);
@@ -474,7 +473,7 @@ export class RegistrationService {
     registrationId: string,
     callback: (registration: CoachRegistration | null) => void
   ): Unsubscribe {
-    const docRef = doc(db, this.collectionName, registrationId);
+    const docRef = doc(db, 'tournaments', registrationId);
 
     return onSnapshot(
       docRef,
@@ -485,15 +484,15 @@ export class RegistrationService {
             id: doc.id,
             tournamentId: data.tournamentId,
             userId: data.userId,
-            coachName: data.coachName,
-            teamName: data.teamName,
+            alias: data.alias || data.coachName,
+            email: data.email || data.contactEmail,
             teamRace: data.teamRace,
-            contactEmail: data.contactEmail,
-            notes: data.notes,
+            fullName: data.fullName,
+            nafNumber: data.nafNumber,
+            teamName: data.teamName,
             status: data.status,
             isAnonymous: data.isAnonymous,
-            createdAt: data.createdAt.toDate().toISOString(),
-            updatedAt: data.updatedAt.toDate().toISOString(),
+            registeredAt: data.registeredAt || data.createdAt,
           };
           callback(registration);
         } else {

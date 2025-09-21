@@ -15,10 +15,10 @@ import {
   serverTimestamp,
   Timestamp,
   onSnapshot,
-  Unsubscribe,
 } from 'firebase/firestore';
+import type { Unsubscribe } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import {
+import type {
   Tournament,
   CreateTournamentRequest,
   UpdateTournamentRequest,

@@ -5,11 +5,11 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
-  User as FirebaseUser,
 } from 'firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
-import { User, CreateUserRequest, LoginRequest, AuthResponse, AuthError } from '../types/user';
+import type { User, CreateUserRequest, LoginRequest, AuthResponse, AuthError } from '../types/user';
 
 export class AuthService {
   /**
@@ -90,6 +90,7 @@ export class AuthService {
           id: firebaseUser.uid,
           email: firebaseUser.email!,
           displayName: firebaseUser.displayName || userData?.displayName,
+          createdAt: userData?.createdAt?.toDate().toISOString() || new Date().toISOString(),
         },
         token,
       };
