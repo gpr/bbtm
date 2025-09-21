@@ -1,8 +1,9 @@
 {
   "name": "bbtm-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "packageManager": "pnpm@10.16.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -19,8 +20,8 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "prepare": "husky",
-    "analyze": "npm run build:analyze && open dist/stats.html",
-    "size": "npm run build:prod && du -sh dist/*"
+    "analyze": "pnpm run build:analyze && open dist/stats.html",
+    "size": "pnpm run build:prod && du -sh dist/*"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
