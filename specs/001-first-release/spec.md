@@ -1,6 +1,6 @@
 # Feature Specification: Blood Bowl Tournament Management System
 
-**Feature Branch**: `001-i-want-to`
+**Feature Branch**: `001-first-release`
 **Created**: 2025-09-19
 **Status**: Draft
 **Input**: User description: "I want to build a web application with a React Frontend, and using firebase that will allow to manage bloodbowl tournament this is a first phase of the application where a application user can create a tournament and let coaches register themself by providing their alias (mandatory), their full name (optional), their email address (mandatory) and their NAF number (optional), the team race (mandatory) and the team name (optional). It should be possible to user to register first to the application or to use an anonymous form."

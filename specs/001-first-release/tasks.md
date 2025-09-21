@@ -1,6 +1,6 @@
 # Tasks: Blood Bowl Tournament Management System
 
-**Input**: Design documents from `/specs/001-i-want-to/`
+**Input**: Design documents from `/specs/001-first-release/`
 **Prerequisites**: plan.md (required), research.md, data-model.md, contracts/api-contracts.md, quickstart.md
 
 ## Execution Flow (main)

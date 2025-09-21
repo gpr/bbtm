@@ -1,8 +1,8 @@
 
 # Implementation Plan: Blood Bowl Tournament Management System
 
-**Branch**: `001-i-want-to` | **Date**: 2025-09-20 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/opt/home/gpr/workspaces/bbtm/specs/001-i-want-to/spec.md`
+**Branch**: `001-first-release` | **Date**: 2025-09-20 | **Spec**: [spec.md](./spec.md)
+**Input**: Feature specification from `/opt/home/gpr/workspaces/bbtm/specs/001-first-release/spec.md`
 
 ## Execution Flow (/plan command scope)
 ```

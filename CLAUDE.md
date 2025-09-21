@@ -3,11 +3,11 @@
 Auto-generated from all feature plans. Last updated: 2025-09-20
 
 ## Active Technologies
-- TypeScript with React 18+ (001-i-want-to) - Constitutional requirement
-- Firebase (Authentication, Firestore, Hosting) (001-i-want-to)
-- Mantine UI components (001-i-want-to) - Constitutional requirement
-- pnpm + Vite + Prettier + Husky + Storybook (001-i-want-to) - Constitutional requirements
-- Jest + React Testing Library + Cypress (001-i-want-to)
+- TypeScript with React 18+ (001-first-release) - Constitutional requirement
+- Firebase (Authentication, Firestore, Hosting) (001-first-release)
+- Mantine UI components (001-first-release) - Constitutional requirement
+- pnpm + Vite + Prettier + Husky + Storybook (001-first-release) - Constitutional requirements
+- Jest + React Testing Library + Cypress (001-first-release)
 
 ## Project Structure
 ```
@@ -19,7 +19,7 @@ frontend/
 └── tests/
 
 specs/
-├── 001-i-want-to/
+├── 001-first-release/
 │   ├── plan.md
 │   ├── research.md
 │   ├── data-model.md
@@ -61,7 +61,7 @@ firebase deploy           # Deploy to Firebase hosting
 - Type safety: TypeScript strict + Zod validation
 
 ## Recent Changes
-- 001-i-want-to: Added Blood Bowl tournament management system with React + Firebase
+- 001-first-release: Added Blood Bowl tournament management system with React + Firebase
 
 <!-- MANUAL ADDITIONS START -->
 <!-- Add your custom development notes here -->
