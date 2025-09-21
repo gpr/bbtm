@@ -42,14 +42,4 @@ jobs:
         with:
           name: build-artifacts
           path: ./frontend/dist
-          retention-days: 30
 
-      - name: Build with bundle analysis
-        run: pnpm build:prod --analyze
-
-      - name: Upload bundle analysis
-        uses: actions/upload-artifact@v4
-        with:
-          name: bundle-analysis
-          path: ./frontend/dist/stats.html
-          retention-days: 7
